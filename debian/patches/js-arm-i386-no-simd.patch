@@ -1,0 +1,25 @@
+From: Adrian Bunk <bunk@debian.org>
+Date: Mon, 19 Sep 2022 20:16:52 +0300
+Subject: Disable SIMD on 32-bit ARM and x86
+
+SIMD (SSE/NEON) is not in the baseline of the i386/armel/armhf ports.
+
+Bug: https://bugzilla.mozilla.org/show_bug.cgi?id=1786619
+Bug-Debian: https://bugs.debian.org/1017961
+---
+ js/moz.configure | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/js/moz.configure b/js/moz.configure
+index 2aa0a20..9fa691b 100644
+--- a/js/moz.configure
++++ b/js/moz.configure
+@@ -573,7 +573,7 @@ option(
+ def rust_simd(value, target):
+     # As of 2019-09-17, the simd-accel feature of encoding_rs has not
+     # been properly set up outside aarch64, armv7, x86 and x86_64.
+-    if target.cpu in ("aarch64", "arm", "x86", "x86_64") and value:
++    if target.cpu in ("aarch64", "x86_64") and value:
+         return True
+ 
+ 

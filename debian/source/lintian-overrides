@@ -1,0 +1,22 @@
+# Many of these tests are written with very long lines, but they do not
+# appear to be generated files
+source-is-missing [js/src/*.js]
+
+# Many of these tests are written with very long lines, but they do not
+# appear to be generated files
+source-contains-prebuilt-javascript-object [js/src/*.js]
+
+# Many of these tests are written with very long lines, but this is not a problem
+very-long-line-length-in-source-file js/src/*.js line length is * characters (>*)
+
+# Shipped wasm binaries are only used by tests, and nothing to be worried about
+source-contains-prebuilt-wasm-binary [js/src/*/tests/*.wasm]
+
+# This is implicit on the fact that we repack the signed upstream source
+orig-tarball-missing-upstream-signature mozjs91_*.orig.tar.xz
+
+# Test data, intentionally contains errors
+elf-error * [testing/web-platform/tests/tools/third_party/packaging/tests/*]
+
+# Intentionally kept for when we potentially switch back to system ICU
+patch-file-present-but-not-mentioned-in-series [debian/patches/system-ICU/*.patch]

@@ -1,0 +1,71 @@
+From: =?utf-8?b?Ik1hcmNvIFRyZXZpc2FuIChUcmV2acOxbyki?= <mail@3v1n0.net>
+Date: Tue, 1 Feb 2022 18:54:29 +0100
+Subject: =?utf-8?q?DateTimeFormat=3A_Use_normal_parenthesis_instead_of_ICU_?=
+ =?utf-8?q?=22=E2=94=9C_=E2=94=A4=22?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+ICU may return pattern data using "├ ┤" parenthesis, to avoid this we
+are replacing them in case this happens.
+
+As per this we can re-enable the day-period-hour cycle for DayPeriod
+
+See: https://unicode-org.atlassian.net/browse/CLDR-13184
+---
+ js/src/builtin/intl/DateTimeFormat.cpp                     | 14 ++++++++++++++
+ .../non262/Intl/DateTimeFormat/day-period-hour-cycle.js    |  2 --
+ 2 files changed, 14 insertions(+), 2 deletions(-)
+
+diff --git a/js/src/builtin/intl/DateTimeFormat.cpp b/js/src/builtin/intl/DateTimeFormat.cpp
+index bd3cebb..cba0e38 100644
+--- a/js/src/builtin/intl/DateTimeFormat.cpp
++++ b/js/src/builtin/intl/DateTimeFormat.cpp
+@@ -636,6 +636,18 @@ static void ReplaceHourSymbol(mozilla::Span<char16_t> patternOrSkeleton,
+   }
+ }
+ 
++// Workaround for https://unicode-org.atlassian.net/browse/CLDR-13184
++static void ReplaceICUParenthesis(mozilla::Span<char16_t> patternOrSkeleton) {
++  PatternIterator<char16_t> iter(patternOrSkeleton);
++  while (auto* ptr = iter.next()) {
++    if (*ptr == 0x251c) {
++      *ptr = '(';
++    } else if (*ptr == 0x2524) {
++      *ptr = ')';
++    }
++  }
++}
++
+ static auto PatternMatchOptions(mozilla::Span<const char16_t> skeleton) {
+   // Values for hour, minute, and second are:
+   // - absent: 0
+@@ -744,6 +756,8 @@ bool js::intl_patternForSkeleton(JSContext* cx, unsigned argc, Value* vp) {
+     ReplaceHourSymbol(pattern, hourCycle.value());
+   }
+ 
++  ReplaceICUParenthesis(pattern);
++
+   JSString* str = pattern.toString();
+   if (!str) {
+     return false;
+diff --git a/js/src/tests/non262/Intl/DateTimeFormat/day-period-hour-cycle.js b/js/src/tests/non262/Intl/DateTimeFormat/day-period-hour-cycle.js
+index 0ad0640..6bfbf94 100644
+--- a/js/src/tests/non262/Intl/DateTimeFormat/day-period-hour-cycle.js
++++ b/js/src/tests/non262/Intl/DateTimeFormat/day-period-hour-cycle.js
+@@ -76,7 +76,6 @@ const tests = [
+     },
+ 
+     // ICU replacement pattern for missing <appendItem> entries in CLDR.
+-    /* Currently unsupported by debian system ICU
+     {
+         date: new Date("2019-01-01T12:00:00"),
+         options: { dayPeriod: "short", minute: "numeric" },
+@@ -85,7 +84,6 @@ const tests = [
+             de: [Minute("0"), Literal(" (Tageshälfte: "), DayPeriod("mittags"), Literal(")")],
+         },
+     },
+-    */
+ ];
+ 
+ for (let {date, options, locales} of tests) {

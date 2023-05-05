@@ -1,0 +1,38 @@
+From: Iain Lane <laney@debian.org>
+Date: Mon, 17 Feb 2020 12:40:13 +0000
+Subject: TestingFunctions: Update ICU's default tz when setting $TZ
+
+ICU maintains its own idea of the default timezone, which we need to
+synchronise when we set TZ directly, as we do here.
+
+Forwarded: no (but should be)
+---
+ js/src/builtin/TestingFunctions.cpp | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/js/src/builtin/TestingFunctions.cpp b/js/src/builtin/TestingFunctions.cpp
+index 006824e..d59386f 100644
+--- a/js/src/builtin/TestingFunctions.cpp
++++ b/js/src/builtin/TestingFunctions.cpp
+@@ -92,6 +92,7 @@
+ #include "js/Wrapper.h"
+ #include "threading/CpuCount.h"
+ #ifdef JS_HAS_INTL_API
++#  include "unicode/timezone.h"
+ #  include "unicode/ucal.h"
+ #  include "unicode/uchar.h"
+ #  include "unicode/uloc.h"
+@@ -6563,7 +6564,12 @@ static bool SetTimeZone(JSContext* cx, unsigned argc, Value* vp) {
+ #  if defined(_WIN32)
+     return _putenv_s("TZ", value) == 0;
+ #  else
+-    return setenv("TZ", value, true) == 0;
++    int r;
++    r = setenv("TZ", value, true) == 0;
++    if (icu::TimeZone* defaultZone = icu::TimeZone::detectHostTimeZone()) {
++       icu::TimeZone::adoptDefault(defaultZone);
++    }
++    return r;
+ #  endif /* _WIN32 */
+   };
+ 

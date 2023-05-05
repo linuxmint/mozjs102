@@ -1,0 +1,30 @@
+From: Simon McVittie <smcv@debian.org>
+Date: Tue, 23 Aug 2022 20:57:15 +0100
+Subject: Bug 1761665 - Extend x86 workaround to 32-bit ARM
+
+If we don't do this, Spidermonkey (mozjs) on ARMv7 fails to compile in
+some configurations.
+
+Bug: https://bugzilla.mozilla.org/show_bug.cgi?id=1761665
+Bug-Debian: https://bugs.debian.org/1017962
+---
+ js/src/jit/GenerateAtomicOperations.py | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/js/src/jit/GenerateAtomicOperations.py b/js/src/jit/GenerateAtomicOperations.py
+index d8a38a0..58affd7 100644
+--- a/js/src/jit/GenerateAtomicOperations.py
++++ b/js/src/jit/GenerateAtomicOperations.py
+@@ -854,9 +854,9 @@ def generate_atomics_header(c_out):
+             "constexpr size_t JS_GENERATED_ATOMICS_WORDSIZE = " + str(wordsize) + ";\n"
+         )
+ 
+-        # Work around a GCC issue on 32-bit x86 by adding MOZ_NEVER_INLINE.
+-        # See bug 1756347.
+-        if is_gcc and cpu_arch == "x86":
++        # Work around a GCC issue on some 32-bit architectures by adding
++        # MOZ_NEVER_INLINE. See bugs 1756347, 1761665.
++        if is_gcc and cpu_arch in ("x86", 'arm'):
+             contents = contents.replace("INLINE_ATTR", "MOZ_NEVER_INLINE inline")
+         else:
+             contents = contents.replace("INLINE_ATTR", "inline")

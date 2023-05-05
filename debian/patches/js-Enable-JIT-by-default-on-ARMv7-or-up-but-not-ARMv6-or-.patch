@@ -1,0 +1,42 @@
+From: Simon McVittie <smcv@debian.org>
+Date: Wed, 24 Aug 2022 20:52:33 +0100
+Subject: js: Enable JIT by default on ARMv7 or up, but not ARMv6 or older
+
+Bug: https://bugzilla.mozilla.org/show_bug.cgi?id=1786619
+Bug-Debian: https://bugs.debian.org/1017961
+Signed-off-by: Simon McVittie <smcv@debian.org>
+---
+ js/moz.configure | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/js/moz.configure b/js/moz.configure
+index 7a241ca..2aa0a20 100644
+--- a/js/moz.configure
++++ b/js/moz.configure
+@@ -152,20 +152,23 @@ set_define("ENABLE_RECORD_TUPLE", enable_record_tuple)
+ 
+ # JIT support
+ # =======================================================
+-@depends(target, "--enable-record-tuple")
+-def jit_default(target, enable_record_tuple):
++@depends(target, arm_target, "--enable-record-tuple")
++def jit_default(target, arm_target, enable_record_tuple):
+     if enable_record_tuple:
+         return False
+     if target.cpu in (
+         "x86",
+         "x86_64",
+-        "arm",
+         "aarch64",
+         "mips32",
+         "mips64",
+         "loongarch64",
+     ):
+         return True
++
++    if target.cpu == "arm" and arm_target.arm_arch >= 7:
++        return True
++
+     return False
+ 
+ 

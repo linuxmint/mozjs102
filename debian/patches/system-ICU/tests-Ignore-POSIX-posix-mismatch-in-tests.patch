@@ -1,0 +1,37 @@
+From: =?utf-8?b?Ik1hcmNvIFRyZXZpc2FuIChUcmV2acOxbyki?= <mail@3v1n0.net>
+Date: Tue, 1 Feb 2022 14:32:19 +0100
+Subject: tests: Ignore POSIX/posix mismatch in tests
+
+We consider the two variants as different while it's actually the same.
+---
+ js/src/tests/non262/Intl/available-locales-resolved.js  | 2 +-
+ js/src/tests/non262/Intl/available-locales-supported.js | 3 +++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/js/src/tests/non262/Intl/available-locales-resolved.js b/js/src/tests/non262/Intl/available-locales-resolved.js
+index 76b144d..38f5dd7 100644
+--- a/js/src/tests/non262/Intl/available-locales-resolved.js
++++ b/js/src/tests/non262/Intl/available-locales-resolved.js
+@@ -33,7 +33,7 @@ for (let intlConstructor of intlConstructors) {
+ 
+     // If |locale| is an available locale, the "lookup" locale matcher should
+     // pick exactly that locale.
+-    assertEq(resolved.locale, locale);
++    assertEq(resolved.locale, locale.replace(/-(POSIX|posix)$/, ''));
+   }
+ }
+ 
+diff --git a/js/src/tests/non262/Intl/available-locales-supported.js b/js/src/tests/non262/Intl/available-locales-supported.js
+index d11b5d7..b28f17e 100644
+--- a/js/src/tests/non262/Intl/available-locales-supported.js
++++ b/js/src/tests/non262/Intl/available-locales-supported.js
+@@ -17,6 +17,9 @@ for (let intlConstructor of intlConstructors) {
+   // Retrieve all available locales of the given Intl service constructor.
+   let available = getAvailableLocalesOf(intlConstructor.name);
+ 
++  for (let i = 0; i < available.length; i++)
++    available[i] = available[i].replace('POSIX', 'posix');
++
+   // All available locales must be reported as supported.
+   let supported = intlConstructor.supportedLocalesOf(available);
+   assertEqArray(supported, available);

@@ -1,0 +1,31 @@
+From: Simon McVittie <smcv@debian.org>
+Date: Tue, 11 Sep 2018 16:03:17 +0100
+Subject: tests: Expect some tests to fail on armel
+
+ARM softfloat has unusual behaviour in corner cases, like these tests.
+Upstream only supports the equivalent of our armhf.
+
+Bug-Debian: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=908481
+Forwarded: not-needed, Debian-specific
+---
+ js/src/tests/jstests.list | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/js/src/tests/jstests.list b/js/src/tests/jstests.list
+index fd772f3..e1256f9 100644
+--- a/js/src/tests/jstests.list
++++ b/js/src/tests/jstests.list
+@@ -624,6 +624,13 @@ fails-if(xulRuntime.debian.DEB_HOST_ARCH_CPU.match(/^i386$/)) script non262/Date
+ fails-if(xulRuntime.debian.DEB_HOST_ARCH_CPU.match(/^i386$/)) script test262/language/types/number/S8.5_A2.1.js
+ fails-if(xulRuntime.debian.DEB_HOST_ARCH_CPU.match(/^i386$/)) script test262/language/types/number/S8.5_A2.2.js
+ 
++# https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=908481
++# Floating-point corner cases are different on ARM softfloat
++fails-if(xulRuntime.debian.DEB_HOST_ARCH.match(/^armel$/)) script non262/Math/log2-approx.js
++fails-if(xulRuntime.debian.DEB_HOST_ARCH.match(/^armel$/)) script test262/built-ins/TypedArray/prototype/fill/fill-values-conversion-operations-consistent-nan.js
++fails-if(xulRuntime.debian.DEB_HOST_ARCH.match(/^armel$/)) script test262/built-ins/TypedArray/prototype/map/return-new-typedarray-conversion-operation-consistent-nan.js
++fails-if(xulRuntime.debian.DEB_HOST_ARCH.match(/^armel$/)) script test262/language/expressions/division/S11.5.2_A4_T10.js
++
+ ###########################################################
+ # Tests disabled due to issues in test262 importer script #
+ ###########################################################

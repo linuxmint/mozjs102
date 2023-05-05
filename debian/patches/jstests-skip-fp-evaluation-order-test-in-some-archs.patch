@@ -1,0 +1,28 @@
+From: =?utf-8?b?Ik1hcmNvIFRyZXZpc2FuIChUcmV2acOxbyki?= <mail@3v1n0.net>
+Date: Tue, 15 Feb 2022 17:52:51 +0000
+Subject: jstests: skip fp-evaluation-order test in some archs
+
+This test is not working properly in some architectures due to
+wrong ToNumber JS-to-C conversion for JS unsafe integers.
+
+Bug-Mozilla: https://bugzilla.mozilla.org/show_bug.cgi?id=1755531
+Forwarded: not-needed
+---
+ js/src/tests/jstests.list | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/js/src/tests/jstests.list b/js/src/tests/jstests.list
+index d64f35a..2c749b1 100644
+--- a/js/src/tests/jstests.list
++++ b/js/src/tests/jstests.list
+@@ -637,6 +637,10 @@ fails-if(xulRuntime.debian.DEB_HOST_ARCH_ENDIAN=="big") script test262/built-ins
+ # This test fails with both System and embedded ICU version
+ skip script non262/Date/time-zones-imported.js
+ 
++# ToNumber isn't working in the same way in all the archs for unsafe integers:
++# https://bugzilla.mozilla.org/show_bug.cgi?id=1755531
++skip-if(xulRuntime.debian.DEB_HOST_ARCH_CPU.match(/i386|s390x|arm64|ppc64|riscv64/)) script test262/built-ins/Date/UTC/fp-evaluation-order.js
++
+ ###########################################################
+ # Tests disabled due to issues in test262 importer script #
+ ###########################################################

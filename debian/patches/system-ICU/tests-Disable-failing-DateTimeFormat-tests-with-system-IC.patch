@@ -1,0 +1,48 @@
+From: =?utf-8?b?Ik1hcmNvIFRyZXZpc2FuIChUcmV2acOxbyki?= <mail@3v1n0.net>
+Date: Tue, 1 Feb 2022 14:39:33 +0100
+Subject: tests: Disable failing DateTimeFormat tests with system ICU
+
+Those are regression from mozjs78
+---
+ js/src/tests/jstests.list                                        | 7 +++++++
+ js/src/tests/non262/Intl/DateTimeFormat/day-period-hour-cycle.js | 2 ++
+ 2 files changed, 9 insertions(+)
+
+diff --git a/js/src/tests/jstests.list b/js/src/tests/jstests.list
+index 6d2b4e1..0c21e26 100644
+--- a/js/src/tests/jstests.list
++++ b/js/src/tests/jstests.list
+@@ -650,6 +650,13 @@ skip script non262/Date/time-zones-historic.js
+ 
+ skip script non262/Intl/DateTimeFormat/timeZone_backward_links.js
+ 
++# DateTimeFormat is lacking some features when using system ICU:
++skip script non262/Intl/DateTimeFormat/fractional-second-digits-append-item.js
++
++# DateTimeFormat is causing some failures in mozjs91 with system ICU, those are REGRESSIONS:
++skip script non262/Intl/DateTimeFormat/related-year.js
++skip script non262/Intl/DateTimeFormat/japanese-gannen-year.js
++
+ # These tests don't work with current (2022.02.01) System ICU.
+ # They were skipped by upstream already in mozjs78, so this is not a regression but rather
+ # a missing debian feature that requires ICU updates.
+diff --git a/js/src/tests/non262/Intl/DateTimeFormat/day-period-hour-cycle.js b/js/src/tests/non262/Intl/DateTimeFormat/day-period-hour-cycle.js
+index 6bfbf94..0ad0640 100644
+--- a/js/src/tests/non262/Intl/DateTimeFormat/day-period-hour-cycle.js
++++ b/js/src/tests/non262/Intl/DateTimeFormat/day-period-hour-cycle.js
+@@ -76,6 +76,7 @@ const tests = [
+     },
+ 
+     // ICU replacement pattern for missing <appendItem> entries in CLDR.
++    /* Currently unsupported by debian system ICU
+     {
+         date: new Date("2019-01-01T12:00:00"),
+         options: { dayPeriod: "short", minute: "numeric" },
+@@ -84,6 +85,7 @@ const tests = [
+             de: [Minute("0"), Literal(" (Tageshälfte: "), DayPeriod("mittags"), Literal(")")],
+         },
+     },
++    */
+ ];
+ 
+ for (let {date, options, locales} of tests) {

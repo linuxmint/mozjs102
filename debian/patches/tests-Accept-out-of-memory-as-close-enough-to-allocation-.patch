@@ -1,0 +1,149 @@
+From: Simon McVittie <smcv@debian.org>
+Date: Mon, 21 Feb 2022 00:09:10 +0000
+Subject: tests: Accept "out of memory" as close enough to "allocation size
+ overflow"
+
+On weaker machines like Debian's mipsel porterbox eller, some of these
+tests will run out of memory before the allocation size can overflow.
+
+Signed-off-by: Simon McVittie <smcv@debian.org>
+Bug-Debian: #1006196
+---
+ js/src/tests/non262/Array/regress-157652.js        | 6 +++---
+ js/src/tests/non262/Array/regress-330812.js        | 6 +++---
+ js/src/tests/non262/Function/regress-338001.js     | 2 +-
+ js/src/tests/non262/extensions/regress-336409-1.js | 6 +++---
+ js/src/tests/non262/regress/regress-303213.js      | 6 +++---
+ js/src/tests/non262/regress/regress-422348.js      | 4 ++--
+ 6 files changed, 15 insertions(+), 15 deletions(-)
+
+diff --git a/js/src/tests/non262/Array/regress-157652.js b/js/src/tests/non262/Array/regress-157652.js
+index 307c6bb..0861c28 100644
+--- a/js/src/tests/non262/Array/regress-157652.js
++++ b/js/src/tests/non262/Array/regress-157652.js
+@@ -84,7 +84,7 @@
+ //-----------------------------------------------------------------------------
+ var BUGNUMBER = 157652;
+ var summary = "Testing that Array.sort() doesn't crash on very large arrays";
+-var expect = 'No Crash';
++var expect = /No Crash/;
+ var actual = 'No Crash';
+ 
+ printBugNumber(BUGNUMBER);
+@@ -110,8 +110,8 @@ try
+ catch(ex)
+ {
+   // handle changed 1.9 branch behavior. see bug 422348
+-  expect = 'InternalError: allocation size overflow';
++  expect = /InternalError: allocation size overflow|out of memory/;
+   actual = ex + '';
+ }
+ 
+-reportCompare(expect, actual, summary);
++reportMatch(expect, actual, summary);
+diff --git a/js/src/tests/non262/Array/regress-330812.js b/js/src/tests/non262/Array/regress-330812.js
+index d358427..c1b0f51 100644
+--- a/js/src/tests/non262/Array/regress-330812.js
++++ b/js/src/tests/non262/Array/regress-330812.js
+@@ -8,7 +8,7 @@
+ var BUGNUMBER = 330812;
+ var summary = 'Making Array(1<<29).sort() less problematic';
+ var actual = 'No Crash';
+-var expect = 'No Crash';
++var expect = /No Crash/;
+ 
+ printBugNumber(BUGNUMBER);
+ printStatus (summary);
+@@ -26,8 +26,8 @@ try
+ catch(ex)
+ {
+   // handle changed 1.9 branch behavior. see bug 422348
+-  expect = 'InternalError: allocation size overflow';
++  expect = /InternalError: allocation size overflow|out of memory/;
+   actual = ex + '';
+ }
+ 
+-reportCompare(expect, actual, summary);
++reportMatch(expect, actual, summary);
+diff --git a/js/src/tests/non262/Function/regress-338001.js b/js/src/tests/non262/Function/regress-338001.js
+index 6afdc4f..2e8c5a0 100644
+--- a/js/src/tests/non262/Function/regress-338001.js
++++ b/js/src/tests/non262/Function/regress-338001.js
+@@ -8,7 +8,7 @@
+ var BUGNUMBER = 338001;
+ var summary = 'integer overflow in jsfun.c:Function';
+ var actual = 'No Crash';
+-var expect = /No Crash|InternalError: allocation size overflow/;
++var expect = /No Crash|InternalError: allocation size overflow|out of memory/;
+ 
+ printBugNumber(BUGNUMBER);
+ printStatus (summary);
+diff --git a/js/src/tests/non262/extensions/regress-336409-1.js b/js/src/tests/non262/extensions/regress-336409-1.js
+index 1f03dfd..2d65a68 100644
+--- a/js/src/tests/non262/extensions/regress-336409-1.js
++++ b/js/src/tests/non262/extensions/regress-336409-1.js
+@@ -8,7 +8,7 @@
+ var BUGNUMBER = 336409;
+ var summary = 'Integer overflow in js_obj_toSource';
+ var actual = 'No Crash';
+-var expect = 'No Crash';
++var expect = /No Crash/;
+ 
+ printBugNumber(BUGNUMBER);
+ printStatus (summary);
+@@ -42,9 +42,9 @@ try
+ }
+ catch(ex)
+ {
+-  expect = 'InternalError: allocation size overflow';
++  expect = /InternalError: allocation size overflow|out of memory/
+   actual = ex + '';
+   print(actual);
+ }
+ 
+-reportCompare(expect, actual, summary);
++reportMatch(expect, actual, summary);
+diff --git a/js/src/tests/non262/regress/regress-303213.js b/js/src/tests/non262/regress/regress-303213.js
+index d01c28d..835f49e 100644
+--- a/js/src/tests/non262/regress/regress-303213.js
++++ b/js/src/tests/non262/regress/regress-303213.js
+@@ -8,7 +8,7 @@
+ var BUGNUMBER = 303213;
+ var summary = 'integer overflow in js';
+ var actual = 'No Crash';
+-var expect = 'No Crash';
++var expect = /No Crash/;
+ 
+ printBugNumber(BUGNUMBER);
+ printStatus (summary);
+@@ -49,8 +49,8 @@ try
+ catch(ex)
+ {
+   // handle changed 1.9 branch behavior. see bug 422348
+-  expect = 'InternalError: allocation size overflow';
++  expect = /InternalError: allocation size overflow|out of memory/;
+   actual = ex + '';
+ }
+  
+-reportCompare(expect, actual, summary);
++reportMatch(expect, actual, summary);
+diff --git a/js/src/tests/non262/regress/regress-422348.js b/js/src/tests/non262/regress/regress-422348.js
+index 2476e7d..3dcccf6 100644
+--- a/js/src/tests/non262/regress/regress-422348.js
++++ b/js/src/tests/non262/regress/regress-422348.js
+@@ -20,7 +20,7 @@ function test()
+   printBugNumber(BUGNUMBER);
+   printStatus (summary);
+  
+-  expect = 'InternalError: allocation size overflow';
++  expect = /InternalError: allocation size overflow|out of memory/;
+   try 
+   { 
+     Array(1 << 30).sort(); 
+@@ -31,5 +31,5 @@ function test()
+     actual = ex + '';
+   } 
+ 
+-  reportCompare(expect, actual, summary);
++  reportMatch(expect, actual, summary);
+ }

@@ -1,0 +1,39 @@
+From: =?utf-8?b?Ik1hcmNvIFRyZXZpc2FuIChUcmV2acOxbyki?= <mail@3v1n0.net>
+Date: Tue, 1 Feb 2022 14:33:35 +0100
+Subject: tests: Use debian provided locale format to check formatted CN dates
+
+Our system ICU is defaulting to show 24-hours format for zh-Hans-CN
+locale, while mozilla uses AM/PM version.
+
+There's no actual difference in result though.
+---
+ js/src/tests/non262/Intl/Date/toLocaleString_timeZone.js     | 2 +-
+ js/src/tests/non262/Intl/Date/toLocaleTimeString_timeZone.js | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/js/src/tests/non262/Intl/Date/toLocaleString_timeZone.js b/js/src/tests/non262/Intl/Date/toLocaleString_timeZone.js
+index a59ecef..e0670cb 100644
+--- a/js/src/tests/non262/Intl/Date/toLocaleString_timeZone.js
++++ b/js/src/tests/non262/Intl/Date/toLocaleString_timeZone.js
+@@ -26,7 +26,7 @@ const tests = [
+     {
+         timeZone: "Asia/Shanghai", locale: "zh-Hans-CN",
+         options: { timeZoneName: "long" },
+-        result: "2012/12/6 中国标准时间 下午8:00:00",
++        result: "2012/12/6 中国标准时间 20:00:00",
+     },
+     {
+         timeZone: { toString: () => "Australia/Melbourne" }, locale: "en-AU",
+diff --git a/js/src/tests/non262/Intl/Date/toLocaleTimeString_timeZone.js b/js/src/tests/non262/Intl/Date/toLocaleTimeString_timeZone.js
+index 14799a2..a9b8b5f 100644
+--- a/js/src/tests/non262/Intl/Date/toLocaleTimeString_timeZone.js
++++ b/js/src/tests/non262/Intl/Date/toLocaleTimeString_timeZone.js
+@@ -26,7 +26,7 @@ const tests = [
+     {
+         timeZone: "Asia/Shanghai", locale: "zh-Hans-CN",
+         options: { timeZoneName: "long" },
+-        result: "中国标准时间 下午8:00:00",
++        result: "中国标准时间 20:00:00",
+     },
+     {
+         timeZone: { toString: () => "Australia/Melbourne" }, locale: "en-AU",

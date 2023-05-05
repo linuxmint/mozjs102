@@ -1,0 +1,77 @@
+From: =?utf-8?b?Ik1hcmNvIFRyZXZpc2FuIChUcmV2acOxbyki?= <mail@3v1n0.net>
+Date: Tue, 1 Feb 2022 14:38:57 +0100
+Subject: tests: Adapt subtags test to debian ICU computed values
+
+---
+ .../tests/non262/Intl/Locale/likely-subtags-generated.js | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/js/src/tests/non262/Intl/Locale/likely-subtags-generated.js b/js/src/tests/non262/Intl/Locale/likely-subtags-generated.js
+index 0a3a8df..873cacd 100644
+--- a/js/src/tests/non262/Intl/Locale/likely-subtags-generated.js
++++ b/js/src/tests/non262/Intl/Locale/likely-subtags-generated.js
+@@ -479,7 +479,7 @@ var maxLikelySubtags = {
+     "hmt": "hmt-Latn-ZZ",
+     "hnd": "hnd-Arab-PK",
+     "hne": "hne-Deva-IN",
+-    "hnj": "hnj-Hmng-LA",
++    "hnj": "hnj-Hmnp-US",
+     "hnn": "hnn-Latn-PH",
+     "hno": "hno-Arab-PK",
+     "ho": "ho-Latn-PG",
+@@ -569,7 +569,7 @@ var maxLikelySubtags = {
+     "kcl": "kcl-Latn-ZZ",
+     "kct": "kct-Latn-ZZ",
+     "kde": "kde-Latn-TZ",
+-    "kdh": "kdh-Arab-TG",
++    "kdh": "kdh-Latn-TG",
+     "kdl": "kdl-Latn-ZZ",
+     "kdt": "kdt-Thai-TH",
+     "kea": "kea-Latn-CV",
+@@ -1022,7 +1022,7 @@ var maxLikelySubtags = {
+     "rel": "rel-Latn-ZZ",
+     "res": "res-Latn-ZZ",
+     "rgn": "rgn-Latn-IT",
+-    "rhg": "rhg-Arab-MM",
++    "rhg": "rhg-Rohg-MM",
+     "ria": "ria-Latn-IN",
+     "rif": "rif-Tfng-MA",
+     "rif-NL": "rif-Latn-NL",
+@@ -1462,7 +1462,7 @@ var maxLikelySubtags = {
+     "und-Hira": "ja-Hira-JP",
+     "und-Hluw": "hlu-Hluw-TR",
+     "und-Hmng": "hnj-Hmng-LA",
+-    "und-Hmnp": "mww-Hmnp-US",
++    "und-Hmnp": "hnj-Hmnp-US",
+     "und-Hung": "hu-Hung-HU",
+     "und-IC": "es-Latn-IC",
+     "und-ID": "id-Latn-ID",
+@@ -2449,7 +2449,7 @@ var minLikelySubtags = {
+     "hmt-Latn-ZZ": "hmt",
+     "hnd-Arab-PK": "hnd",
+     "hne-Deva-IN": "hne",
+-    "hnj-Hmng-LA": "hnj",
++    "hnj-Hmng-LA": "hnj-Hmng-LA",
+     "hnn-Hano-PH": "hnn-Hano",
+     "hnn-Latn-PH": "hnn",
+     "hno-Arab-PK": "hno",
+@@ -2542,7 +2542,7 @@ var minLikelySubtags = {
+     "kcl-Latn-ZZ": "kcl",
+     "kct-Latn-ZZ": "kct",
+     "kde-Latn-TZ": "kde",
+-    "kdh-Arab-TG": "kdh",
++    "kdh-Arab-TG": "kdh-Arab",
+     "kdl-Latn-ZZ": "kdl",
+     "kdt-Thai-KH": "kdt-KH",
+     "kdt-Thai-LA": "kdt-LA",
+@@ -3018,8 +3018,8 @@ var minLikelySubtags = {
+     "rel-Latn-ZZ": "rel",
+     "res-Latn-ZZ": "res",
+     "rgn-Latn-IT": "rgn",
+-    "rhg-Arab-MM": "rhg",
+-    "rhg-Rohg-MM": "rhg-Rohg",
++    "rhg-Arab-MM": "rhg-Arab",
++    "rhg-Rohg-MM": "rhg",
+     "ria-Latn-IN": "ria",
+     "rif-Latn-NL": "rif-NL",
+     "rif-Tfng-MA": "rif",

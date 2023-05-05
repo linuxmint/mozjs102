@@ -1,3 +1,9 @@
+mozjs102 (102.10.0-0mint1) victoria; urgency=medium
+
+  * Bump down version to keep it inferior to what might be in 24.04.
+
+ -- Clement Lefebvre <root@linuxmint.com>  Fri, 05 May 2023 11:22:58 +0100
+
 mozjs102 (102.10.0-1) unstable; urgency=high
 
   * New upstream release (LP: #2015880)
